@@ -1,0 +1,27 @@
+default
+	websites.deployment.root			c:\sites
+	
+	website.apppool.identity		NT AUTHORITY\NETWORK SERVICE
+	website.apppool.password
+	website.apppool.username
+	
+	website.cert.name		${website.name}		
+	website.hostname
+	website.https.port			80
+	website.https.port			443		
+	website.log.folder				c:\temp
+	website.name			PowerUp.RemoteAgent
+	website.proxy.useProxy		false
+	website.proxy.host			
+	website.proxy.port			
+	website.use.selfsignedcert		true
+	website.use.ssl					true
+	
+local
+	execute.remotely		false
+	website.environment		local
+	website.hostname			local.deployagent
+	website.http.port			8807
+	website.https.port			8808
+	website.name			Local.DeployAgent
+	website.server				localhost

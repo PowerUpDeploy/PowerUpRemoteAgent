@@ -1,0 +1,8 @@
+default
+	temp.root.drive				c
+	remote.temp.working.folder	\\${server.name}\deploytemp
+	local.temp.working.folder	${temp.root.drive}:\deploytemp
+
+localhost
+	server.name					localhost
+	remote.temp.working.folder	${local.temp.working.folder}

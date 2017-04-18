@@ -1,0 +1,50 @@
+<project default="build-package">
+  <property name="solution.name" value="PowerUpRemoteAgent" />
+  <property name="build.environment" value="Local" unless="${property::exists('build.environment')}" />  
+  <property name="run.tests" value="true" unless="${property::exists('run.tests')}" />
+  <property name="exclude.test.categories" value="None" unless="${property::exists('exclude.test.categories')}" />
+
+  <include buildfile="_powerup\build\nant\common.build" />  
+  <target name="build-package" depends="clean set-assembly-version compile-solution package-project copy-build-files create-package-info zip-package"/>
+  
+  <target name="set-environment">
+    <echo message="Setting 'build.environment' environment variable to '${build.environment}'" />
+    <setenv>
+      <variable name="build.environment" value="${build.environment}" />
+    </setenv>
+  </target>
+
+  <target name="dotnet-prerequisites" description="Installs .NET Prerequisites (nuget packages)">
+    <echo message="Installing .NET Prerequisites" />
+    <exec workingdir="${root.dir}" program="prerequisites-dotnet.bat"></exec>  
+  </target>  
+
+  <target name="set-assembly-version" description="generates the version number" depends="dotnet-prerequisites">
+    <echo message="Setting the build version to ${version.major}.0.0.${version.minor}..." />
+    <attrib file="CommonAssemblyInfo.cs" readonly="false" />
+    <asminfo output="CommonAssemblyInfo.cs" language="CSharp">
+      <imports>
+        <import namespace="System" />
+        <import namespace="System.Reflection" />
+      </imports>
+      <attributes>
+        <attribute type="AssemblyVersionAttribute" value="${version.major}.0.0.${version.minor}" />
+        <attribute type="AssemblyFileVersionAttribute" value="${version.major}.0.0.${version.minor}" />
+      </attributes>
+    </asminfo>
+    <attrib file="CommonAssemblyInfo.cs" readonly="true" />
+  </target>
+  
+  <target name="package-project">
+    <copy todir="${package.dir}\Web" overwrite="true" flatten="false" includeemptydirs="true">
+      <fileset basedir="RemoteAgentWeb">
+        <include name="**.*"/>        
+        <exclude name="obj\**"/>
+        <exclude name="packages.config"/>
+		<exclude name="**.cs"/>
+        <exclude name="**.csproj*"/>
+      </fileset>
+    </copy>
+  </target>
+</project>
+
